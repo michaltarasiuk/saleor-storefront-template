@@ -27,7 +27,6 @@
 			},
 			"style": {
 				"noNegationElse": "error",
-				"useNamingConvention": "error",
 				"useShorthandArrayType": "error",
 				"useShorthandAssign": "error",
 				"useSingleCaseStatement": "error"

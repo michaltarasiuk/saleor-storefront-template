@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextFetchEvent, NextRequest } from "next/server";
 
-type Handler = (
+export type Handler = (
 	request: NextRequest,
 	response: NextResponse,
 	event: NextFetchEvent,
@@ -21,7 +21,6 @@ export function middleware() {
 					return result;
 				}
 			}
-			return response;
 		};
 
 	const use = (handler: Handler) => {

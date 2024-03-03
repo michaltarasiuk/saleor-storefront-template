@@ -17,7 +17,7 @@ export const localeHandler: Handler = (request) => {
 		? getLocalBaseName(requestedLocale)
 		: null;
 
-	const languages = Array.from(negotiator.languages());
+	const languages = [...negotiator.languages()];
 	if (requestedLocaleBaseName) languages.unshift(requestedLocaleBaseName);
 
 	let locale: string;
@@ -27,13 +27,13 @@ export const localeHandler: Handler = (request) => {
 		locale = DEFAULT_LOCALE;
 	}
 
-	if (locale !== requestedLocale) {
-		const pathname = [locale, ...segments.slice(1)].join("/");
-		const url = new URL(pathname, request.url);
+	if (locale === requestedLocale) return;
 
-		if (locale !== requestedLocaleBaseName) return NextResponse.redirect(url);
-		return NextResponse.rewrite(url);
-	}
+	const pathname = [locale, ...segments.slice(1)].join("/");
+	const url = new URL(pathname, request.url);
+
+	if (locale === requestedLocaleBaseName) return NextResponse.rewrite(url);
+	return NextResponse.redirect(url);
 };
 
 function getLocalBaseName(tag: string) {

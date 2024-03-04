@@ -1,10 +1,9 @@
-import { Output, object, string } from "valibot";
+import { object, parse } from "valibot";
+import type { Output } from "valibot";
 
-const PROCESS_ENV_SCHEMA = object({
-	a: string(),
-});
+const PROCESS_ENV_SCHEMA = object({});
 
-PROCESS_ENV_SCHEMA._parse(process.env);
+parse(PROCESS_ENV_SCHEMA, process.env);
 
 declare global {
 	namespace NodeJS {

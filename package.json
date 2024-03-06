@@ -8,11 +8,13 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "biome lint --changed",
-		"lint:apply": "biome lint --changed --apply",
+		"lint_apply": "biome lint --changed --apply",
 		"format": "biome format --changed --write",
 		"test": "vitest",
+		"changeset_add": "changeset",
+		"changeset_version": "changeset version",
 		"storybook": "storybook dev -p 6006",
-		"build-storybook": "storybook build"
+		"storybook_build": "storybook build"
 	},
 	"dependencies": {
 		"@formatjs/intl-localematcher": "0.5.4",
@@ -24,6 +26,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.5.3",
+		"@changesets/cli": "2.27.1",
 		"@storybook/addon-essentials": "7.6.17",
 		"@storybook/addon-interactions": "7.6.17",
 		"@storybook/addon-links": "7.6.17",

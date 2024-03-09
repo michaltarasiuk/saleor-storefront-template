@@ -1,5 +1,5 @@
 import { isObject } from "@/shared/tools/object_class_label";
-import { array, object, optional, safeParse, unknown } from "valibot";
+import { array, is, object, optional, unknown } from "valibot";
 import type { TypedDocumentString } from "./generated/graphql";
 
 type FetchOptions = Omit<RequestInit, "method" | "body">;
@@ -35,27 +35,22 @@ export async function fetchGraphQL<Data, Variables>(
 		]),
 		...fetchOptions,
 	});
-
 	const contentType = response.headers.get("Content-Type");
+
 	if (
-		!(
-			(contentType === "application/json" && response.status === 200) ||
-			(contentType === "application/graphql-response+json" && response.ok)
-		)
+		(contentType === "application/json" && response.status === 200) ||
+		(contentType === "application/graphql-response+json" && response.ok)
 	) {
-		throw Error("Invalid response");
+		const json = await response.json();
+
+		if (is(RESULT_SCHEMA, json)) {
+			const { data } = json;
+
+			return <{ data: Data }>{
+				data,
+			};
+		}
+		throw new Error("No Content");
 	}
-
-	const json = await response.json();
-	const result = safeParse(RESULT_SCHEMA, json);
-	if (result.success) {
-		const { data, errors } = result.output;
-
-		return {
-			data: data as Data,
-			errors,
-		};
-	}
-
-	throw new Error("No Content");
+	throw new Error("Invalid response");
 }

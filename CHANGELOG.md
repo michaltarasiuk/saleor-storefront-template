@@ -1,5 +1,11 @@
 # storefront
 
+## 0.1.6
+
+### Patch Changes
+
+- Add CombinedError Class
+
 ## 0.1.5
 
 ### Patch Changes

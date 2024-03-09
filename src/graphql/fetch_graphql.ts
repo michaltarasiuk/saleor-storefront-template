@@ -1,5 +1,6 @@
 import { isObject } from "@/shared/tools/object_class_label";
-import { array, is, object, optional, unknown } from "valibot";
+import { array, is, object, optional, string, unknown } from "valibot";
+import { CombinedError } from "./combined_error";
 import type { TypedDocumentString } from "./generated/graphql";
 
 type FetchOptions = Omit<RequestInit, "method" | "body">;
@@ -13,7 +14,13 @@ const mediaTypes = [
 
 const RESULT_SCHEMA = object({
 	data: unknown(),
-	errors: optional(array(unknown())),
+	errors: optional(
+		array(
+			object({
+				message: string(),
+			}),
+		),
+	),
 });
 
 export async function fetchGraphQL<Data, Variables>(
@@ -44,10 +51,11 @@ export async function fetchGraphQL<Data, Variables>(
 		const json = await response.json();
 
 		if (is(RESULT_SCHEMA, json)) {
-			const { data } = json;
+			const { data, errors } = json;
 
-			return <{ data: Data }>{
+			return <{ data: Data; error?: CombinedError }>{
 				data,
+				...(errors && { error: new CombinedError(errors) }),
 			};
 		}
 		throw new Error("No Content");

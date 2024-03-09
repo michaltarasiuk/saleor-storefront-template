@@ -53,8 +53,8 @@ export async function fetchGraphQL<Data, Variables>(
 		if (is(RESULT_SCHEMA, json)) {
 			const { data, errors } = json;
 
-			return <{ data: Data; error?: CombinedError }>{
-				data,
+			return {
+				data: data as Data,
 				...(errors && { error: new CombinedError(errors) }),
 			};
 		}

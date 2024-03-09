@@ -48,7 +48,7 @@ function rehydrateGraphQlError({
 function generateErrorMessage(graphQlErrs: GraphQLError[]) {
 	let error = "";
 	for (const err of graphQlErrs) {
-		error += "\n";
+		if (error) error += "\n";
 		error += `[GraphQL] ${err.message}`;
 	}
 	return error;

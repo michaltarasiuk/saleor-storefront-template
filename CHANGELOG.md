@@ -1,5 +1,11 @@
 # storefront
 
+## 0.1.5
+
+### Patch Changes
+
+- Add fetchGraphQL utility
+
 ## 0.1.4
 
 ### Patch Changes

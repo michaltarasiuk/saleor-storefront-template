@@ -1,7 +1,7 @@
 import { isRecord } from "@/shared/tools/object_class_label";
 import { array, is, object, optional, string, unknown } from "valibot";
-import { CombinedError } from "./combined_error";
 import type { TypedDocumentString } from "./generated/graphql";
+import { GraphQLError } from "./graphql_error";
 
 type FetchOptions = Omit<RequestInit, "method" | "body">;
 
@@ -55,7 +55,7 @@ export async function fetchGraphQL<Data, Variables>(
 
 			return {
 				data: data as Data,
-				...(errors && { error: new CombinedError(errors) }),
+				...(errors && { error: new GraphQLError(errors) }),
 			};
 		}
 		throw new Error("Invalid content");

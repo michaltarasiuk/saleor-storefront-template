@@ -3,6 +3,11 @@
 	"editor.codeActionsOnSave": {
 		"source.organizeImports.biome": "explicit"
 	},
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.patterns": {
+		"*.ts": "${capture}.test.ts",
+		"*.tsx": "${capture}.test.tsx"
+	},
 	"files.readonlyInclude": {
 		"bun.lockb": true,
 		"next-env.d.ts": true,

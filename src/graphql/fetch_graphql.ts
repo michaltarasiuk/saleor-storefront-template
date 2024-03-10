@@ -1,4 +1,4 @@
-import { isObject } from "@/shared/tools/object_class_label";
+import { isRecord } from "@/shared/tools/object_class_label";
 import { array, is, object, optional, string, unknown } from "valibot";
 import { CombinedError } from "./combined_error";
 import type { TypedDocumentString } from "./generated/graphql";
@@ -37,7 +37,7 @@ export async function fetchGraphQL<Data, Variables>(
 		headers: new Headers([
 			...mediaTypes,
 			...Object.entries(
-				isObject(headers) ? headers : Object.fromEntries(headers ?? []),
+				isRecord(headers) ? headers : Object.fromEntries(headers ?? []),
 			),
 		]),
 		...fetchOptions,

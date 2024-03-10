@@ -11,4 +11,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Run Biome
-        run: bunx biome ci .
+        run: npx biome ci .

@@ -1,27 +1,17 @@
-import { fetchGraphQL } from "@/graphql/fetch_graphql";
-import { graphql } from "@/graphql/generated";
+import { ProductCard } from "@/features/shop/components/ProductCard";
+import { Grid } from "@radix-ui/themes";
 
-const Pagination_ProductsQuery = graphql(`
-  query Pagination_ProductsQuery(
-    $first: Int
-  ) {
-    products(
-      first: $first,
-      channel: "default-channel"
-    ) {
-      edges {
-        node {
-          name
-        }
-      }
-    }
-  }
-`);
-
-export default async function RootPage() {
-	await fetchGraphQL(Pagination_ProductsQuery, {
-		first: 1,
-	});
-
-	return null;
+export default function RootPage() {
+	return (
+		<Grid columns={{ lg: "4", sm: "3", xs: "2" }} gap="3">
+			<ProductCard />
+			<ProductCard />
+			<ProductCard />
+			<ProductCard />
+			<ProductCard />
+			<ProductCard />
+			<ProductCard />
+			<ProductCard />
+		</Grid>
+	);
 }

@@ -1,5 +1,11 @@
 # storefront
 
+## 0.1.7
+
+### Patch Changes
+
+- Add product card
+
 ## 0.1.6
 
 ### Patch Changes

@@ -58,7 +58,7 @@ export async function fetchGraphQL<Data, Variables>(
 				...(errors && { error: new CombinedError(errors) }),
 			};
 		}
-		throw new Error("No Content");
+		throw new Error("Invalid content");
 	}
 	throw new Error("Invalid response");
 }

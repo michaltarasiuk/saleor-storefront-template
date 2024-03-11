@@ -40,7 +40,10 @@ function getChannel(_locale: string, _requestedChannel: string) {
 
 type BaseSegments = { locale: string; channel: string };
 
-function getResponse(request: NextRequest, { locale, channel }: BaseSegments) {
+function getResponse(
+	request: NextRequest,
+	{ locale, channel }: { locale: string; channel: string },
+) {
 	const [requestedLocale, requestedChannel, ...segments] = splitPathname(
 		request.nextUrl.pathname,
 	);
@@ -48,9 +51,7 @@ function getResponse(request: NextRequest, { locale, channel }: BaseSegments) {
 	const pathname = toPathname(locale, channel, ...segments);
 	const url = new URL(pathname, request.url);
 
-	return match<{
-		[Key in keyof BaseSegments]: BaseSegments[Key] | null;
-	}>({
+	return match<BaseSegments | Record<keyof BaseSegments, null>>({
 		locale,
 		channel,
 	})

@@ -1,7 +1,7 @@
-import { localeHandler } from "./middleware/handlers/locale_handler";
+import { baseHandler } from "./middleware/handlers/base_handler";
 import { middleware } from "./middleware/middleware";
 
-export default middleware().use(localeHandler).return();
+export default middleware().use(baseHandler).return();
 
 export const config = {
 	matcher: [

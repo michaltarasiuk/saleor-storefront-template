@@ -3,7 +3,6 @@ import type { NextFetchEvent, NextRequest } from "next/server";
 
 export type Handler = (
 	request: NextRequest,
-	response: NextResponse,
 	event: NextFetchEvent,
 ) => NextResponse | void | Promise<void>;
 
@@ -12,10 +11,8 @@ export function middleware() {
 
 	const returnFn =
 		() => async (request: NextRequest, event: NextFetchEvent) => {
-			const response = new NextResponse();
-
 			for (const handler of handlers) {
-				const result = await handler(request, response, event);
+				const result = await handler(request, event);
 
 				if (result) {
 					return result;

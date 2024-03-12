@@ -4,8 +4,8 @@ import type { SetRequired } from "type-fest";
 type ErrorLike = SetRequired<Partial<GraphQLWeb.GraphQLError>, "message">;
 
 export class GraphQLError extends Error {
-	public name: string;
-	public message: string;
+	override name: string;
+	override message: string;
 	public graphQLErrors: GraphQLWeb.GraphQLError[];
 
 	constructor(graphQLErrors: ErrorLike[]) {
@@ -19,7 +19,7 @@ export class GraphQLError extends Error {
 		this.graphQLErrors = normalizedGraphQLErrors;
 	}
 
-	toString() {
+	override toString() {
 		return this.message;
 	}
 }

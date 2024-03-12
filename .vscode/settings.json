@@ -6,11 +6,13 @@
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.patterns": {
 		"*.ts": "${capture}.test.ts",
-		"*.tsx": "${capture}.test.tsx"
+		"*.tsx": "${capture}.test.tsx",
+		"write_static_config.ts": "static_config.json"
 	},
 	"files.readonlyInclude": {
 		"bun.lockb": true,
 		"next-env.d.ts": true,
+		"static_config.json": true,
 		"dist/**": true,
 		"node_modules/**": true,
 		"src/graphql/generated/**": true

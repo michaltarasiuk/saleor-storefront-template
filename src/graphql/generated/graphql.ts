@@ -32078,12 +32078,10 @@ export type _Service = {
   sdl?: Maybe<Scalars['String']['output']>;
 };
 
-export type Pagination_ProductsQueryQueryVariables = Exact<{
-  first?: InputMaybe<Scalars['Int']['input']>;
-}>;
+export type Channels_QueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Pagination_ProductsQueryQuery = { products?: { edges: Array<{ node: { name: string } }> } | null };
+export type Channels_QueryQuery = { channels?: Array<{ slug: string, isActive: boolean, defaultCountry: { code: string } }> | null };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -32100,14 +32098,14 @@ export class TypedDocumentString<TResult, TVariables>
   }
 }
 
-export const Pagination_ProductsQueryDocument = new TypedDocumentString(`
-    query Pagination_ProductsQuery($first: Int) {
-  products(first: $first, channel: "default-channel") {
-    edges {
-      node {
-        name
-      }
+export const Channels_QueryDocument = new TypedDocumentString(`
+    query Channels_Query {
+  channels {
+    slug
+    isActive
+    defaultCountry {
+      code
     }
   }
 }
-    `) as unknown as TypedDocumentString<Pagination_ProductsQueryQuery, Pagination_ProductsQueryQueryVariables>;
+    `) as unknown as TypedDocumentString<Channels_QueryQuery, Channels_QueryQueryVariables>;

@@ -17,7 +17,6 @@
 				"useSimplifiedLogicExpression": "error"
 			},
 			"correctness": {
-				"noUndeclaredVariables": "error",
 				"useHookAtTopLevel": "error"
 			},
 			"style": {

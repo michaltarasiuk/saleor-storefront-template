@@ -22,3 +22,6 @@ next-env.d.ts
 
 # vitest
 coverage
+
+# static
+static_config.json

@@ -1,5 +1,11 @@
 # storefront
 
+## 0.1.8
+
+### Patch Changes
+
+- Add channel handling
+
 ## 0.1.7
 
 ### Patch Changes

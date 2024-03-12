@@ -1,7 +1,10 @@
-import { AVAILABLE_LOCALES, DEFAULT_LOCALE } from "@/intl/consts";
-import { getLocalBaseName } from "@/intl/tools/get_local_base_name";
+import { DEFAULT_CHANNEL } from "@/shared/consts/channel";
+import { AVAILABLE_LOCALES, DEFAULT_LOCALE } from "@/shared/consts/intl";
+import { getIntlLocale } from "@/shared/tools/get_intl_locale";
 import { splitPathname, toPathname } from "@/shared/tools/pathname";
+import staticConfig from "@config/static_config.json";
 import { match as matchLocale } from "@formatjs/intl-localematcher";
+import { A, pipe } from "@mobily/ts-belt";
 import Negotiator from "negotiator";
 import { NextRequest, NextResponse } from "next/server";
 import { match } from "ts-pattern";
@@ -21,21 +24,50 @@ export const baseHandler: Handler = (request) => {
 	return getResponse(request, { locale, channel });
 };
 
-function getLocale([...languages]: string[], requestedLocale: string) {
-	const requestedLocaleBaseName = getLocalBaseName(requestedLocale);
-	if (requestedLocaleBaseName) languages.unshift(requestedLocaleBaseName);
+function getLocale(languages: string[], requestedLocale?: string) {
+	const finalLanguages = pipe(
+		languages,
+		(value) => {
+			const localeBaseName = requestedLocale
+				? getIntlLocale(requestedLocale)?.baseName
+				: null;
+
+			if (localeBaseName) return A.prepend(value, localeBaseName);
+			return value;
+		},
+		A.uniq,
+	);
 
 	let locale: string;
 	try {
-		locale = matchLocale(languages, AVAILABLE_LOCALES, DEFAULT_LOCALE);
-	} catch {
+		locale = matchLocale(finalLanguages, AVAILABLE_LOCALES, DEFAULT_LOCALE);
+	} catch (error) {
 		locale = DEFAULT_LOCALE;
 	}
 	return locale;
 }
 
-function getChannel(_locale: string, _requestedChannel: string) {
-	return "channel-pln";
+function findChannelBySlug(slug: string) {
+	return staticConfig.channels.find((channel) => channel.slug === slug);
+}
+
+function findChannelByRegion(region: string) {
+	return staticConfig.channels.find(
+		({ defaultCountry }) => defaultCountry.code === region,
+	);
+}
+
+function getChannel(locale: string, requestedChannel?: string) {
+	if (requestedChannel) {
+		const channel = findChannelBySlug(requestedChannel);
+		if (channel) return channel.slug;
+	}
+
+	const region = getIntlLocale(locale)?.region;
+	if (!region) return DEFAULT_CHANNEL;
+
+	const channel = findChannelByRegion(region);
+	return channel?.slug ?? DEFAULT_CHANNEL;
 }
 
 type BaseSegments = { locale: string; channel: string };
@@ -51,7 +83,7 @@ function getResponse(
 	const pathname = toPathname(locale, channel, ...segments);
 	const url = new URL(pathname, request.url);
 
-	return match<BaseSegments | Record<keyof BaseSegments, null>>({
+	return match<Record<keyof BaseSegments, string | null | undefined>>({
 		locale,
 		channel,
 	})
@@ -64,7 +96,9 @@ function getResponse(
 		)
 		.with(
 			{
-				locale: getLocalBaseName(requestedLocale),
+				locale: requestedLocale
+					? getIntlLocale(requestedLocale)?.baseName
+					: null,
 				channel: requestedChannel,
 			},
 			() => NextResponse.rewrite(url),

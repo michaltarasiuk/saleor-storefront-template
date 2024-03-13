@@ -4,8 +4,8 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
-		"dev": "bun run write_static_config && next dev",
-		"build": "bun run write_static_config && next build",
+		"dev": "bun run write_static_config.ts && next dev",
+		"build": "bun run write_static_config.ts && next build",
 		"start": "next start",
 		"generate": "graphql-codegen",
 		"lint": "biome lint .",
@@ -16,8 +16,7 @@
 		"changeset_add": "changeset",
 		"changeset_version": "changeset version",
 		"storybook": "storybook dev -p 6006",
-		"storybook_build": "storybook build",
-		"write_static_config": "bun run write_static_config.ts"
+		"storybook_build": "storybook build"
 	},
 	"dependencies": {
 		"@0no-co/graphql.web": "1.0.4",

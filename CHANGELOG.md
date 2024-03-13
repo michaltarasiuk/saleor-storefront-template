@@ -1,5 +1,11 @@
 # storefront
 
+## 0.1.9
+
+### Patch Changes
+
+- Add useChannel hook
+
 ## 0.1.8
 
 ### Patch Changes

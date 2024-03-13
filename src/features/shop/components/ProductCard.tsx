@@ -45,6 +45,7 @@ export function ProductCard() {
 						tabIndex={-1}
 						color="gray"
 						variant="ghost"
+						highContrast={state.sneakersBookmarked}
 						onClick={() =>
 							setState((currentState) => ({
 								...currentState,
@@ -63,7 +64,7 @@ export function ProductCard() {
 			<Flex align="end" justify="between" mb="2">
 				<Box>
 					<Flex mb="1">
-						<Link size="2" color="gray">
+						<Link size="2" color="gray" highContrast>
 							Footwear
 						</Link>
 					</Flex>
@@ -114,7 +115,13 @@ export function ProductCard() {
 						</Select.Content>
 					</Select.Root>
 				</Flex>
-				<Button tabIndex={-1} size="2" variant="solid" color="gray">
+				<Button
+					tabIndex={-1}
+					size="2"
+					variant="solid"
+					color="gray"
+					highContrast
+				>
 					Buy
 				</Button>
 			</Flex>

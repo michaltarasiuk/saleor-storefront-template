@@ -14,13 +14,13 @@ import * as types from './graphql';
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query Channels_Query {\n    channels {\n      slug\n      isActive\n      defaultCountry {\n        code\n      }\n    }\n  }\n": types.Channels_QueryDocument,
+    "\n  query StaticConfig_Query {\n    channels {\n      slug\n      isActive\n      defaultCountry {\n        code\n      }\n    }\n  }\n": types.StaticConfig_QueryDocument,
 };
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Channels_Query {\n    channels {\n      slug\n      isActive\n      defaultCountry {\n        code\n      }\n    }\n  }\n"): typeof import('./graphql').Channels_QueryDocument;
+export function graphql(source: "\n  query StaticConfig_Query {\n    channels {\n      slug\n      isActive\n      defaultCountry {\n        code\n      }\n    }\n  }\n"): typeof import('./graphql').StaticConfig_QueryDocument;
 
 
 export function graphql(source: string) {

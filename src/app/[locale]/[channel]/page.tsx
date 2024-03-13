@@ -1,1 +1,1 @@
-export { Shop as default } from "@/features/shop/Shop";
+export { Products as default } from "@/features/products/Products";

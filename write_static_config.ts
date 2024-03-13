@@ -2,8 +2,8 @@ import { fetchGraphQL } from "@/graphql/fetch_graphql";
 import { graphql } from "@/graphql/generated";
 import { $env } from "./env_variables";
 
-const Channels_Query = graphql(/* GraphQL */ `
-  query Channels_Query {
+const StaticConfig_Query = graphql(/* GraphQL */ `
+  query StaticConfig_Query {
     channels {
       slug
       isActive
@@ -15,7 +15,7 @@ const Channels_Query = graphql(/* GraphQL */ `
 `);
 
 const { data, error } = await fetchGraphQL(
-	Channels_Query,
+	StaticConfig_Query,
 	{},
 	{
 		headers: {

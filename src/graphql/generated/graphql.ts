@@ -29421,6 +29421,10 @@ export type UserCreateInput = {
    * User account is confirmed.
    *
    * Added in Saleor 3.15.
+   *
+   * DEPRECATED: this field will be removed in Saleor 4.0.
+   *
+   * The user will be always set as unconfirmed. The confirmation will take place when the user sets the password.
    */
   isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
   /** User language code. */
@@ -32078,10 +32082,10 @@ export type _Service = {
   sdl?: Maybe<Scalars['String']['output']>;
 };
 
-export type Channels_QueryQueryVariables = Exact<{ [key: string]: never; }>;
+export type StaticConfig_QueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Channels_QueryQuery = { channels?: Array<{ slug: string, isActive: boolean, defaultCountry: { code: string } }> | null };
+export type StaticConfig_QueryQuery = { channels?: Array<{ slug: string, isActive: boolean, defaultCountry: { code: string } }> | null };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -32098,8 +32102,8 @@ export class TypedDocumentString<TResult, TVariables>
   }
 }
 
-export const Channels_QueryDocument = new TypedDocumentString(`
-    query Channels_Query {
+export const StaticConfig_QueryDocument = new TypedDocumentString(`
+    query StaticConfig_Query {
   channels {
     slug
     isActive
@@ -32108,4 +32112,4 @@ export const Channels_QueryDocument = new TypedDocumentString(`
     }
   }
 }
-    `) as unknown as TypedDocumentString<Channels_QueryQuery, Channels_QueryQueryVariables>;
+    `) as unknown as TypedDocumentString<StaticConfig_QueryQuery, StaticConfig_QueryQueryVariables>;

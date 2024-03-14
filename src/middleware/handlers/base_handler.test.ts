@@ -106,11 +106,11 @@ describe("base handler", () => {
 	});
 
 	test("rewrite when locale has wrong format", async () => {
-		const request = createNextRequest("/EN");
+		const request = createNextRequest("/EN/default-channel");
 		await baseHandler(request, event);
 
-		expect(NextResponse.redirect as Mock).toHaveBeenCalledOnce();
-		expect(NextResponse.redirect as Mock).toReturnWith(
+		expect(NextResponse.rewrite as Mock).toHaveBeenCalledOnce();
+		expect(NextResponse.rewrite as Mock).toReturnWith(
 			"http://localhost:3000/en/default-channel",
 		);
 	});

@@ -41,7 +41,7 @@ function getLocale(languages: string[], requestedLocale?: string) {
 	let locale: string;
 	try {
 		locale = matchLocale(finalLanguages, AVAILABLE_LOCALES, DEFAULT_LOCALE);
-	} catch (error) {
+	} catch {
 		locale = DEFAULT_LOCALE;
 	}
 	return locale;

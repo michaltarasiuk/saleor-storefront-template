@@ -36,7 +36,7 @@ vi.mock("next/server", async (importOriginal) => {
 declare const event: NextFetchEvent;
 
 function createNextRequest(pathname = "/") {
-	return new NextRequest(new URL(pathname, "http://localhost:3000"), {
+	return new NextRequest(new URL(pathname, "https://example.com"), {
 		headers: {
 			"Accept-Language": "en-US,en;q=0.9",
 		},
@@ -54,7 +54,7 @@ describe("base handler", () => {
 
 		expect(NextResponse.redirect as Mock).toHaveBeenCalledOnce();
 		expect(NextResponse.redirect as Mock).toReturnWith(
-			"http://localhost:3000/en/default-channel",
+			"https://example.com/en/default-channel",
 		);
 	});
 
@@ -71,7 +71,7 @@ describe("base handler", () => {
 
 		expect(NextResponse.redirect as Mock).toHaveBeenCalledOnce();
 		expect(NextResponse.redirect as Mock).toReturnWith(
-			"http://localhost:3000/en/default-channel",
+			"https://example.com/en/default-channel",
 		);
 	});
 
@@ -81,7 +81,7 @@ describe("base handler", () => {
 
 		expect(NextResponse.redirect as Mock).toHaveBeenCalledOnce();
 		expect(NextResponse.redirect as Mock).toReturnWith(
-			"http://localhost:3000/en/default-channel",
+			"https://example.com/en/default-channel",
 		);
 	});
 
@@ -91,7 +91,7 @@ describe("base handler", () => {
 
 		expect(NextResponse.redirect as Mock).toHaveBeenCalledOnce();
 		expect(NextResponse.redirect as Mock).toReturnWith(
-			"http://localhost:3000/en/default-channel",
+			"https://example.com/en/default-channel",
 		);
 	});
 
@@ -101,7 +101,7 @@ describe("base handler", () => {
 
 		expect(NextResponse.redirect as Mock).toHaveBeenCalledOnce();
 		expect(NextResponse.redirect as Mock).toReturnWith(
-			"http://localhost:3000/pl-PL/channel-pln",
+			"https://example.com/pl-PL/channel-pln",
 		);
 	});
 
@@ -111,7 +111,7 @@ describe("base handler", () => {
 
 		expect(NextResponse.rewrite as Mock).toHaveBeenCalledOnce();
 		expect(NextResponse.rewrite as Mock).toReturnWith(
-			"http://localhost:3000/en/default-channel",
+			"https://example.com/en/default-channel",
 		);
 	});
 });

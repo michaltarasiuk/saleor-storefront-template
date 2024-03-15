@@ -1,5 +1,5 @@
 import { isRecord } from "@/shared/tools/object_class_label";
-import { array, is, object, optional, string, unknown } from "valibot";
+import { array, object, optional, parse, string, unknown } from "valibot";
 import type { TypedDocumentString } from "./generated/graphql";
 import { GraphQLError } from "./graphql_error";
 
@@ -49,16 +49,12 @@ export async function fetchGraphQL<Data, Variables>(
 		(contentType === "application/graphql-response+json" && response.ok)
 	) {
 		const json = await response.json();
+		const { data, errors } = parse(RESULT_SCHEMA, json);
 
-		if (is(RESULT_SCHEMA, json)) {
-			const { data, errors } = json;
-
-			return {
-				data: data as Data,
-				...(errors && { error: new GraphQLError(errors) }),
-			};
-		}
-		throw new Error("Invalid content");
+		return {
+			data: data as Data,
+			...(errors && { error: new GraphQLError(errors) }),
+		};
 	}
 	throw new Error("Invalid response");
 }

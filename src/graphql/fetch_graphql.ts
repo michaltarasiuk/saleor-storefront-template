@@ -1,18 +1,25 @@
 import { isRecord } from "@/shared/tools/object_class_label";
+import * as GraphQLWeb from "@0no-co/graphql.web";
+import type { SetRequired } from "type-fest";
 import { array, object, optional, parse, string, unknown } from "valibot";
 import type { TypedDocumentString } from "./generated/graphql";
-import { GraphQLError } from "./graphql_error";
 
 type FetchOptions = Omit<RequestInit, "method" | "body">;
 
 const url = new URL("/graphql/", process.env.NEXT_PUBLIC_GRAPHQL_ORIGIN);
+
+const applicationMediaTypes = {
+	json: "application/json",
+	graphqlJson: "application/graphql-response+json",
+};
 const mediaTypes = [
-	["Content-Type", "application/json"],
-	["Accept", "application/graphql-response+json"],
-	["Accept", "application/json"],
+	["Content-Type", applicationMediaTypes.json],
+	...Object.values(applicationMediaTypes).map(
+		(value) => ["Accept", value] satisfies [string, string],
+	),
 ] satisfies HeadersInit;
 
-const RESULT_SCHEMA = object({
+const JSON_SCHEMA = object({
 	data: unknown(),
 	errors: optional(
 		array(
@@ -45,11 +52,11 @@ export async function fetchGraphQL<Data, Variables>(
 	const contentType = response.headers.get("Content-Type");
 
 	if (
-		(contentType === "application/json" && response.status === 200) ||
-		(contentType === "application/graphql-response+json" && response.ok)
+		(contentType === applicationMediaTypes.json && response.status === 200) ||
+		(contentType === applicationMediaTypes.graphqlJson && response.ok)
 	) {
 		const json = await response.json();
-		const { data, errors } = parse(RESULT_SCHEMA, json);
+		const { data, errors } = parse(JSON_SCHEMA, json);
 
 		return {
 			data: data as Data,
@@ -57,4 +64,58 @@ export async function fetchGraphQL<Data, Variables>(
 		};
 	}
 	throw new Error("Invalid response");
+}
+
+type GraphQLWebError = SetRequired<Partial<GraphQLWeb.GraphQLError>, "message">;
+
+class GraphQLError extends Error {
+	override name: string;
+	override message: string;
+	public graphQLErrors: GraphQLWeb.GraphQLError[];
+
+	constructor(graphQLWebErrors: GraphQLWebError[]) {
+		const normalizedGraphQLErrors = graphQLWebErrors.map(
+			rehydrateGraphQLWebError,
+		);
+		const message = generateErrorMessage(normalizedGraphQLErrors);
+
+		super(message);
+
+		this.name = "GraphQLError";
+		this.message = message;
+		this.graphQLErrors = normalizedGraphQLErrors;
+	}
+
+	override toString() {
+		return this.message;
+	}
+}
+
+function rehydrateGraphQLWebError({
+	message,
+	nodes,
+	source,
+	positions,
+	path,
+	originalError,
+	extensions,
+}: GraphQLWebError) {
+	return new GraphQLWeb.GraphQLError(
+		message,
+		nodes,
+		source,
+		positions,
+		path,
+		originalError,
+		extensions,
+	);
+}
+
+function generateErrorMessage(errors: GraphQLWeb.GraphQLError[]) {
+	let errorMessage = "";
+	for (const error of errors) {
+		if (error) errorMessage += "\n";
+		errorMessage += `[GraphQL] ${error.message}`;
+	}
+	return errorMessage;
 }

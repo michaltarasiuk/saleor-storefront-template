@@ -27668,7 +27668,7 @@ export type TaxConfiguration = Node & ObjectWithMetadata & {
    */
   privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /**
-   * The tax app id that will be used to calculate the taxes for the given channel. Empty value for `TAX_APP` set as `taxCalculationStrategy` means that Saleor will iterate over all installed tax apps. If multiple tax apps exist with provided tax app id use the `App` with newest `created` date. Will become mandatory in 4.0 for `TAX_APP` `taxCalculationStrategy`.
+   * The tax app `App.identifier` that will be used to calculate the taxes for the given channel. Empty value for `TAX_APP` set as `taxCalculationStrategy` means that Saleor will iterate over all installed tax apps. If multiple tax apps exist with provided tax app id use the `App` with newest `created` date. Will become mandatory in 4.0 for `TAX_APP` `taxCalculationStrategy`.
    *
    * Added in Saleor 3.19.
    */
@@ -27750,7 +27750,7 @@ export type TaxConfigurationPerCountry = {
   /** Determines whether displayed prices should include taxes for this country. */
   displayGrossPrices: Scalars['Boolean']['output'];
   /**
-   * The tax app id that will be used to calculate the taxes for the given channel and country. If not provided, use the value from the channel's tax configuration.
+   * The tax app `App.identifier` that will be used to calculate the taxes for the given channel and country. If not provided, use the value from the channel's tax configuration.
    *
    * Added in Saleor 3.19.
    */
@@ -27767,7 +27767,7 @@ export type TaxConfigurationPerCountryInput = {
   /** Determines whether displayed prices should include taxes for this country. */
   displayGrossPrices: Scalars['Boolean']['input'];
   /**
-   * The tax app identifier that will be used to calculate the taxes for the given channel and country. If not provided, use the value from the channel's tax configuration.
+   * The tax app `App.identifier` that will be used to calculate the taxes for the given channel and country. If not provided, use the value from the channel's tax configuration.
    *
    * Added in Saleor 3.19.
    */
@@ -27817,7 +27817,7 @@ export type TaxConfigurationUpdateInput = {
   /** List of country codes for which to remove the tax configuration. */
   removeCountriesConfiguration?: InputMaybe<Array<CountryCode>>;
   /**
-   * The tax app id that will be used to calculate the taxes for the given channel. Empty value for `TAX_APP` set as `taxCalculationStrategy` means that Saleor will iterate over all installed tax apps. If multiple tax apps exist with provided tax app id use the `App` with newest `created` date. It's possible to set plugin by using prefix `plugin:` with `PLUGIN_ID` e.g. with Avalara `plugin:mirumee.taxes.avalara`.Will become mandatory in 4.0 for `TAX_APP` `taxCalculationStrategy`.
+   * The tax app `App.identifier` that will be used to calculate the taxes for the given channel. Empty value for `TAX_APP` set as `taxCalculationStrategy` means that Saleor will iterate over all installed tax apps. If multiple tax apps exist with provided tax app id use the `App` with newest `created` date. It's possible to set plugin by using prefix `plugin:` with `PLUGIN_ID` e.g. with Avalara `plugin:mirumee.taxes.avalara`.Will become mandatory in 4.0 for `TAX_APP` `taxCalculationStrategy`.
    *
    * Added in Saleor 3.19.
    */
@@ -32082,6 +32082,23 @@ export type _Service = {
   sdl?: Maybe<Scalars['String']['output']>;
 };
 
+export type Products_QueryQueryVariables = Exact<{
+  channel: Scalars['String']['input'];
+  first: Scalars['Int']['input'];
+}>;
+
+
+export type Products_QueryQuery = { products?: { edges: Array<{ node: { ' $fragmentRefs'?: { 'ProductCard_ProductFragmentFragment': ProductCard_ProductFragmentFragment } } }> } | null };
+
+export type ProductCard_ProductFragmentFragment = (
+  { name: string, description?: unknown | null }
+  & { ' $fragmentRefs'?: { 'ProductCardThumbnail_ProductFragmentFragment': ProductCardThumbnail_ProductFragmentFragment;'ProductCardDescription_ProductFragmentFragment': ProductCardDescription_ProductFragmentFragment } }
+) & { ' $fragmentName'?: 'ProductCard_ProductFragmentFragment' };
+
+export type ProductCardThumbnail_ProductFragmentFragment = { name: string, thumbnail?: { url: string, alt?: string | null } | null } & { ' $fragmentName'?: 'ProductCardThumbnail_ProductFragmentFragment' };
+
+export type ProductCardDescription_ProductFragmentFragment = { description?: unknown | null } & { ' $fragmentName'?: 'ProductCardDescription_ProductFragmentFragment' };
+
 export type StaticConfig_QueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -32101,7 +32118,63 @@ export class TypedDocumentString<TResult, TVariables>
     return this.value;
   }
 }
-
+export const ProductCardThumbnail_ProductFragmentFragmentDoc = new TypedDocumentString(`
+    fragment ProductCardThumbnail_ProductFragment on Product {
+  name
+  thumbnail {
+    url
+    alt
+  }
+}
+    `, {"fragmentName":"ProductCardThumbnail_ProductFragment"}) as unknown as TypedDocumentString<ProductCardThumbnail_ProductFragmentFragment, unknown>;
+export const ProductCardDescription_ProductFragmentFragmentDoc = new TypedDocumentString(`
+    fragment ProductCardDescription_ProductFragment on Product {
+  description
+}
+    `, {"fragmentName":"ProductCardDescription_ProductFragment"}) as unknown as TypedDocumentString<ProductCardDescription_ProductFragmentFragment, unknown>;
+export const ProductCard_ProductFragmentFragmentDoc = new TypedDocumentString(`
+    fragment ProductCard_ProductFragment on Product {
+  name
+  description
+  ...ProductCardThumbnail_ProductFragment
+  ...ProductCardDescription_ProductFragment
+}
+    fragment ProductCardThumbnail_ProductFragment on Product {
+  name
+  thumbnail {
+    url
+    alt
+  }
+}
+fragment ProductCardDescription_ProductFragment on Product {
+  description
+}`, {"fragmentName":"ProductCard_ProductFragment"}) as unknown as TypedDocumentString<ProductCard_ProductFragmentFragment, unknown>;
+export const Products_QueryDocument = new TypedDocumentString(`
+    query Products_Query($channel: String!, $first: Int!) {
+  products(channel: $channel, first: $first) {
+    edges {
+      node {
+        ...ProductCard_ProductFragment
+      }
+    }
+  }
+}
+    fragment ProductCard_ProductFragment on Product {
+  name
+  description
+  ...ProductCardThumbnail_ProductFragment
+  ...ProductCardDescription_ProductFragment
+}
+fragment ProductCardThumbnail_ProductFragment on Product {
+  name
+  thumbnail {
+    url
+    alt
+  }
+}
+fragment ProductCardDescription_ProductFragment on Product {
+  description
+}`) as unknown as TypedDocumentString<Products_QueryQuery, Products_QueryQueryVariables>;
 export const StaticConfig_QueryDocument = new TypedDocumentString(`
     query StaticConfig_Query {
   channels {

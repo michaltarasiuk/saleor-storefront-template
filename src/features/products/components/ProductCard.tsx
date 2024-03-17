@@ -1,65 +1,41 @@
-"use client";
-
-import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons";
-import { Label } from "@radix-ui/react-label";
+import { type FragmentType, getFragment, graphql } from "@/graphql/generated";
 import {
 	Box,
-	Button,
 	Card,
 	Flex,
 	Heading,
-	IconButton,
 	Link,
-	Select,
 	Separator,
 	Text,
 } from "@radix-ui/themes";
-import { useState } from "react";
+import Image from "next/image";
+import { ProductCardBookmark } from "./ProductCardBookmark";
+import { ProductCardQuickBuy } from "./ProductCardQuickBuy";
 
-export function ProductCard() {
-	const [state, setState] = useState({
-		sneakersBookmarked: false,
-	});
+const ProductCard_ProductFragment = graphql(/* GraphQL */ `
+  fragment ProductCard_ProductFragment on Product {
+    name
+    description
+    ...ProductCardThumbnail_ProductFragment
+    ...ProductCardDescription_ProductFragment
+  }
+`);
+
+type ProductCardProps = {
+	product: FragmentType<typeof ProductCard_ProductFragment>;
+};
+
+export function ProductCard({ product }: ProductCardProps) {
+	const { name, ...fragmentRefs } = getFragment(
+		ProductCard_ProductFragment,
+		product,
+	);
 
 	return (
 		<Card size="1">
 			<Flex mb="2" position="relative">
-				<img
-					width="100%"
-					height="270"
-					src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=560&h=540&q=80"
-					alt="product card alt"
-				/>
-				<Flex
-					align="center"
-					justify="center"
-					position="absolute"
-					bottom="0"
-					right="0"
-					width="6"
-					height="6"
-					m="2"
-				>
-					<IconButton
-						size="2"
-						tabIndex={-1}
-						color="gray"
-						variant="ghost"
-						highContrast={state.sneakersBookmarked}
-						onClick={() =>
-							setState((currentState) => ({
-								...currentState,
-								sneakersBookmarked: !currentState.sneakersBookmarked,
-							}))
-						}
-					>
-						{state.sneakersBookmarked ? (
-							<BookmarkFilledIcon width="16" height="16" />
-						) : (
-							<BookmarkIcon width="16" height="16" />
-						)}
-					</IconButton>
-				</Flex>
+				<ProductCardThumbnail product={fragmentRefs} />
+				<ProductCardBookmark />
 			</Flex>
 			<Flex align="end" justify="between" mb="2">
 				<Box>
@@ -69,62 +45,70 @@ export function ProductCard() {
 						</Link>
 					</Flex>
 					<Heading as="h3" size="3">
-						Sneakers #12
+						{name}
 					</Heading>
 				</Box>
 				<Text size="6" weight="bold">
 					$149
 				</Text>
 			</Flex>
-			<Text as="p" size="2" color="gray" mb="4">
-				Love at the first sight for enthusiasts seeking a fresh and whimsical
-				style.
-			</Text>
+			<ProductCardDescription product={fragmentRefs} />
 			<Box style={{ marginTop: -1 }}>
 				<Separator size="4" my="4" />
 			</Box>
-			<Flex gap="2" align="end">
-				<Flex direction="column" grow="1">
-					<Label asChild>
-						<Text size="1" color="gray" mb="1">
-							Color
-						</Text>
-					</Label>
-					<Select.Root defaultValue="Pastel" size="2">
-						<Select.Trigger tabIndex={-1} variant="soft" />
-						<Select.Content variant="soft" position="popper">
-							<Select.Item value="Pastel">Pastel</Select.Item>
-							<Select.Item value="Bright">Bright</Select.Item>
-						</Select.Content>
-					</Select.Root>
-				</Flex>
-				<Flex direction="column" style={{ minWidth: 80 }}>
-					<Label asChild>
-						<Text size="1" color="gray" mb="1">
-							Size
-						</Text>
-					</Label>
-					<Select.Root defaultValue="8" size="2">
-						<Select.Trigger tabIndex={-1} variant="soft" />
-						<Select.Content variant="soft" position="popper">
-							{Array.from({ length: 12 }, (_, i) => i).map((value) => (
-								<Select.Item key={value} value={String(value * 0.5 + 5)}>
-									{value * 0.5 + 5}
-								</Select.Item>
-							))}
-						</Select.Content>
-					</Select.Root>
-				</Flex>
-				<Button
-					tabIndex={-1}
-					size="2"
-					variant="solid"
-					color="gray"
-					highContrast
-				>
-					Buy
-				</Button>
-			</Flex>
+			<ProductCardQuickBuy />
 		</Card>
+	);
+}
+
+const ProductCardThumbnail_ProductFragment = graphql(/* GraphQL */ `
+  fragment ProductCardThumbnail_ProductFragment on Product {
+    name
+    thumbnail {
+      url
+      alt
+    }
+  }
+`);
+
+type ProductCardThumbnailProps = {
+	product: FragmentType<typeof ProductCardThumbnail_ProductFragment>;
+};
+
+function ProductCardThumbnail({ product }: ProductCardThumbnailProps) {
+	const { thumbnail, name } = getFragment(
+		ProductCardThumbnail_ProductFragment,
+		product,
+	);
+	if (!thumbnail) return null;
+
+	return (
+		<Image
+			src={thumbnail.url}
+			alt={thumbnail.alt ?? name}
+			quality={100}
+			width={400}
+			height={400}
+		/>
+	);
+}
+
+const ProductCardDescription_ProductFragment = graphql(/* GraphQL */ `
+  fragment ProductCardDescription_ProductFragment on Product {
+    description
+  }
+`);
+
+type ProductCardDescriptionProps = {
+	product: FragmentType<typeof ProductCardDescription_ProductFragment>;
+};
+
+function ProductCardDescription({ product }: ProductCardDescriptionProps) {
+	getFragment(ProductCardDescription_ProductFragment, product);
+
+	return (
+		<Text as="p" size="2" color="gray" mb="4">
+			here
+		</Text>
 	);
 }

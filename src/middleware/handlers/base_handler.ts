@@ -24,13 +24,16 @@ export const baseHandler: Handler = (request) => {
 	return getResponse(request, { locale, channel });
 };
 
+function optionalGetIntlLocale(optionalTag: string | undefined) {
+	if (!optionalTag) return null;
+	return getIntlLocale(optionalTag);
+}
+
 function getLocale(languages: string[], requestedLocale?: string) {
 	const finalLanguages = pipe(
 		languages,
 		(value) => {
-			const localeBaseName = requestedLocale
-				? getIntlLocale(requestedLocale)?.baseName
-				: null;
+			const localeBaseName = optionalGetIntlLocale(requestedLocale)?.baseName;
 
 			if (localeBaseName) return A.prepend(value, localeBaseName);
 			return value;
@@ -96,9 +99,7 @@ function getResponse(
 		)
 		.with(
 			{
-				locale: requestedLocale
-					? getIntlLocale(requestedLocale)?.baseName
-					: null,
+				locale: optionalGetIntlLocale(requestedLocale)?.baseName,
 				channel: requestedChannel,
 			},
 			() => NextResponse.rewrite(url),

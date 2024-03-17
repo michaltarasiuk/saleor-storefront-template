@@ -14,9 +14,29 @@ import * as types from './graphql';
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n  query Products_Query($channel: String!, $first: Int!) {\n    products(channel: $channel, first: $first) {\n      edges {\n        node {\n          ...ProductCard_ProductFragment\n        }\n      }\n    }\n  }\n": types.Products_QueryDocument,
+    "\n  fragment ProductCard_ProductFragment on Product {\n    name\n    description\n    ...ProductCardThumbnail_ProductFragment\n    ...ProductCardDescription_ProductFragment\n  }\n": types.ProductCard_ProductFragmentFragmentDoc,
+    "\n  fragment ProductCardThumbnail_ProductFragment on Product {\n    name\n    thumbnail {\n      url\n      alt\n    }\n  }\n": types.ProductCardThumbnail_ProductFragmentFragmentDoc,
+    "\n  fragment ProductCardDescription_ProductFragment on Product {\n    description\n  }\n": types.ProductCardDescription_ProductFragmentFragmentDoc,
     "\n  query StaticConfig_Query {\n    channels {\n      slug\n      isActive\n      defaultCountry {\n        code\n      }\n    }\n  }\n": types.StaticConfig_QueryDocument,
 };
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query Products_Query($channel: String!, $first: Int!) {\n    products(channel: $channel, first: $first) {\n      edges {\n        node {\n          ...ProductCard_ProductFragment\n        }\n      }\n    }\n  }\n"): typeof import('./graphql').Products_QueryDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment ProductCard_ProductFragment on Product {\n    name\n    description\n    ...ProductCardThumbnail_ProductFragment\n    ...ProductCardDescription_ProductFragment\n  }\n"): typeof import('./graphql').ProductCard_ProductFragmentFragmentDoc;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment ProductCardThumbnail_ProductFragment on Product {\n    name\n    thumbnail {\n      url\n      alt\n    }\n  }\n"): typeof import('./graphql').ProductCardThumbnail_ProductFragmentFragmentDoc;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment ProductCardDescription_ProductFragment on Product {\n    description\n  }\n"): typeof import('./graphql').ProductCardDescription_ProductFragmentFragmentDoc;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -6,7 +6,7 @@
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.patterns": {
 		"*.ts": "${capture}.test.ts",
-		"*.tsx": "${capture}.test.tsx",
+		"*.tsx": "${capture}.test.tsx, ${capture}*.tsx",
 		"write_static_config.ts": "static_config.json"
 	},
 	"files.readonlyInclude": {

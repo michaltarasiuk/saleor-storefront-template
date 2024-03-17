@@ -9,6 +9,7 @@ const Products_Query = graphql(/* GraphQL */ `
     products(channel: $channel, first: $first) {
       edges {
         node {
+          id
           ...ProductCard_ProductFragment
         }
       }
@@ -28,8 +29,8 @@ export async function Products({ params: { channel } }: ProductsProps) {
 
 	return (
 		<Grid columns={{ lg: "4", sm: "3", xs: "2" }} gap="3">
-			{products?.edges.map(({ node }) => (
-				<ProductCard product={node} />
+			{products?.edges.map(({ node: { id, ...product } }) => (
+				<ProductCard key={id} product={product} />
 			))}
 		</Grid>
 	);

@@ -32088,7 +32088,10 @@ export type Products_QueryQueryVariables = Exact<{
 }>;
 
 
-export type Products_QueryQuery = { products?: { edges: Array<{ node: { ' $fragmentRefs'?: { 'ProductCard_ProductFragmentFragment': ProductCard_ProductFragmentFragment } } }> } | null };
+export type Products_QueryQuery = { products?: { edges: Array<{ node: (
+        { id: string }
+        & { ' $fragmentRefs'?: { 'ProductCard_ProductFragmentFragment': ProductCard_ProductFragmentFragment } }
+      ) }> } | null };
 
 export type ProductCard_ProductFragmentFragment = (
   { name: string, description?: unknown | null }
@@ -32154,6 +32157,7 @@ export const Products_QueryDocument = new TypedDocumentString(`
   products(channel: $channel, first: $first) {
     edges {
       node {
+        id
         ...ProductCard_ProductFragment
       }
     }

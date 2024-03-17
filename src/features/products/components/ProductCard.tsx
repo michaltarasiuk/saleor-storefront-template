@@ -86,7 +86,6 @@ function ProductCardThumbnail({ product }: ProductCardThumbnailProps) {
 		<Image
 			src={thumbnail.url}
 			alt={thumbnail.alt ?? name}
-			quality={100}
 			width={400}
 			height={400}
 		/>
@@ -108,7 +107,7 @@ function ProductCardDescription({ product }: ProductCardDescriptionProps) {
 
 	return (
 		<Text as="p" size="2" color="gray" mb="4">
-			here
+			description
 		</Text>
 	);
 }

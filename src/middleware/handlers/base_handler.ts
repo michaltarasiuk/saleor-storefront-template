@@ -24,7 +24,7 @@ export const baseHandler: Handler = (request) => {
 	return getResponse(request, { locale, channel });
 };
 
-function optionalGetIntlLocale(optionalTag: string | undefined) {
+function resolveIntlLocale(optionalTag: string | undefined) {
 	if (!optionalTag) return null;
 	return getIntlLocale(optionalTag);
 }
@@ -33,9 +33,9 @@ function getLocale(languages: string[], requestedLocale?: string) {
 	const finalLanguages = pipe(
 		languages,
 		(value) => {
-			const localeBaseName = optionalGetIntlLocale(requestedLocale)?.baseName;
-
+			const localeBaseName = resolveIntlLocale(requestedLocale)?.baseName;
 			if (localeBaseName) return A.prepend(value, localeBaseName);
+
 			return value;
 		},
 		A.uniq,
@@ -99,7 +99,7 @@ function getResponse(
 		)
 		.with(
 			{
-				locale: optionalGetIntlLocale(requestedLocale)?.baseName,
+				locale: resolveIntlLocale(requestedLocale)?.baseName,
 				channel: requestedChannel,
 			},
 			() => NextResponse.rewrite(url),

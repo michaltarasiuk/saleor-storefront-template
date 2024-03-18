@@ -1,6 +1,6 @@
 {
 	"name": "storefront",
-	"version": "0.1.9",
+	"version": "0.1.0",
 	"type": "module",
 	"private": true,
 	"scripts": {
@@ -13,8 +13,6 @@
 		"storybook_build": "storybook build",
 		"test": "vitest",
 		"test_coverage": "vitest --coverage",
-		"changeset_add": "changeset",
-		"changeset_version": "changeset version",
 		"generate": "graphql-codegen",
 		"lint": "biome lint .",
 		"lint_apply": "biome lint . --apply",
@@ -38,7 +36,6 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.5.3",
-		"@changesets/cli": "2.27.1",
 		"@graphql-codegen/cli": "5.0.2",
 		"@storybook/addon-essentials": "7.6.17",
 		"@storybook/addon-interactions": "7.6.17",

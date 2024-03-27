@@ -1,10 +1,15 @@
+// @ts-check
+
+const graphqlOrigin = process.env.NEXT_PUBLIC_GRAPHQL_ORIGIN;
+if (!graphqlOrigin) throw Error("graphql origin is not defined");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	distDir: "dist",
 	images: {
 		remotePatterns: [
 			{
-				hostname: new URL(process.env.NEXT_PUBLIC_GRAPHQL_ORIGIN).hostname,
+				hostname: new URL(graphqlOrigin).hostname,
 			},
 		],
 	},

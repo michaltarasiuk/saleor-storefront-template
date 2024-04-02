@@ -27,6 +27,7 @@ vi.mock("next/server", async (importOriginal) => {
 	return {
 		...mod,
 		NextResponse: {
+			...mod.NextResponse,
 			rewrite: vi.fn((url: string | URL | NextURL) => url.toString()),
 			redirect: vi.fn((url: string | URL | NextURL) => url.toString()),
 		},

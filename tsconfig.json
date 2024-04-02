@@ -1,32 +1,55 @@
 {
-	"compilerOptions": {
-		"module": "esnext",
-		"moduleResolution": "bundler",
-		"paths": { "@/*": ["./src/*"], "@config/*": ["./*"] },
-		"noEmit": true,
-		"resolveJsonModule": true,
-		"plugins": [{ "name": "next" }],
-		"esModuleInterop": true,
-		"isolatedModules": true,
-		"forceConsistentCasingInFileNames": true,
-		"verbatimModuleSyntax": true,
-		"jsx": "preserve",
-		"lib": ["esnext", "dom", "dom.iterable"],
-		"target": "ESNext",
-		"useDefineForClassFields": true,
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@config/*": [
+        "./*"
+      ]
+    },
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "jsx": "preserve",
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "target": "ESNext",
+    "useDefineForClassFields": true,
     "strict": true,
-		"skipLibCheck": true,
-		"incremental": true,
-		"allowUnreachableCode": false,
-		"allowUnusedLabels": false,
-		"strictNullChecks": true,
-		"noFallthroughCasesInSwitch": true,
-		"noImplicitOverride": true,
-		"noPropertyAccessFromIndexSignature": true,
-		"noUncheckedIndexedAccess": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-	},
-	"include": ["dist/types/**/*.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
-	"exclude": ["node_modules"]
+    "skipLibCheck": true,
+    "incremental": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "strictNullChecks": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowJs": true
+  },
+  "include": [
+    "dist/types/**/*.ts",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -25,45 +25,50 @@ const JSON_SCHEMA = object({
 	),
 });
 
+type FetchGraphQLOptions = Omit<RequestInit, "method" | "body">;
+
 export async function fetchGraphQL<Data, Variables>(
 	query: TypedDocumentString<Data, Variables>,
 	variables: Variables,
-	{ headers, ...fetchOptions }: Omit<RequestInit, "method" | "body"> = {},
+	{ headers: headers_, ...fetchOptions }: FetchGraphQLOptions = {},
 ) {
 	const url = new URL("/graphql/", process.env.NEXT_PUBLIC_GRAPHQL_ORIGIN);
+	const headers = new Headers([
+		...mediaTypes,
+		...Object.entries(
+			isObject(headers_) ? headers_ : Object.fromEntries(headers_ ?? []),
+		),
+	]);
+
 	const response = await fetch(url, {
 		method: "POST",
 		body: JSON.stringify({
 			query,
 			variables,
 		}),
-		headers: new Headers([
-			...mediaTypes,
-			...Object.entries(
-				isObject(headers) ? headers : Object.fromEntries(headers ?? []),
-			),
-		]),
+		headers,
 		...fetchOptions,
 	});
+	validateResponse(response);
 
-	if (validateResponseContentType(response)) {
-		const json = await response.json();
-		const { data, errors } = parse(JSON_SCHEMA, json);
+	const json = await response.json();
+	const { data, errors } = parse(JSON_SCHEMA, json);
 
-		return {
-			data: data as Data,
-			...(errors && { error: new GraphQLError(errors) }),
-		};
-	}
-	throw new Error("Invalid response");
+	return {
+		data: data as Data,
+		...(errors && { error: new GraphQLError(errors) }),
+	};
 }
 
-function validateResponseContentType(response: Response) {
+function validateResponse(response: Response) {
 	const contentType = response.headers.get("Content-Type");
-	return (
+	const isSuccessResponse =
 		(contentType === applicationMediaTypes.json && response.status === 200) ||
-		(contentType === applicationMediaTypes.graphqlJson && response.ok)
-	);
+		(contentType === applicationMediaTypes.graphqlJson && response.ok);
+
+	if (!isSuccessResponse) {
+		throw new Error("Invalid response");
+	}
 }
 
 type GraphQLWebError = SetRequired<Partial<GraphQLWeb.GraphQLError>, "message">;

@@ -1,7 +1,7 @@
 // @ts-check
 
 const graphqlOrigin = process.env.NEXT_PUBLIC_GRAPHQL_ORIGIN;
-if (!graphqlOrigin) throw Error("graphql origin is not defined");
+if (!graphqlOrigin) throw new Error("graphql origin is not defined");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

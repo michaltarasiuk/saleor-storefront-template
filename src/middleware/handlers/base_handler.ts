@@ -69,7 +69,9 @@ function getResponse(
 	const [requestedLocale, requestedChannel, ...segments] = splitPathname(
 		request.nextUrl.pathname,
 	);
-	const url = new URL(toPathname(locale, channel, ...segments), request.url);
+
+	const pathname = toPathname(locale, channel, ...segments);
+	const url = new URL(pathname, request.url);
 
 	return match({
 		locale,

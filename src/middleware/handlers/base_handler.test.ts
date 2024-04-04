@@ -23,13 +23,17 @@ vi.mock("@config/static_config.json", () => ({
 }));
 
 vi.mock("next/server", async (importOriginal) => {
-	const mod = await importOriginal<typeof import("next/server")>();
+	const module = await importOriginal<typeof import("next/server")>();
 	return {
-		...mod,
+		...module,
 		NextResponse: {
-			...mod.NextResponse,
-			rewrite: vi.fn((url: string | URL | NextURL) => url.toString()),
-			redirect: vi.fn((url: string | URL | NextURL) => url.toString()),
+			...module.NextResponse,
+			rewrite: vi.fn(
+				(_url: string | URL | NextURL) => new module.NextResponse(),
+			),
+			redirect: vi.fn(
+				(_url: string | URL | NextURL) => new module.NextResponse(),
+			),
 		},
 	};
 });
@@ -53,9 +57,8 @@ describe("base handler", () => {
 		const request = createNextRequest();
 		await baseHandler(request, event);
 
-		expect(NextResponse.redirect as Mock).toHaveBeenCalledOnce();
-		expect(NextResponse.redirect as Mock).toReturnWith(
-			"https://example.com/en/default-channel",
+		expect(NextResponse.redirect).toHaveBeenCalledWith(
+			new URL("https://example.com/en/default-channel"),
 		);
 	});
 
@@ -63,16 +66,15 @@ describe("base handler", () => {
 		const request = createNextRequest("/en/default-channel");
 		await baseHandler(request, event);
 
-		expect(NextResponse.redirect as Mock).not.toHaveBeenCalledOnce();
+		expect(NextResponse.redirect).not.toHaveBeenCalledOnce();
 	});
 
 	test(`redirect to "en" when locale is not supported`, async () => {
 		const request = createNextRequest("/en-AU");
 		await baseHandler(request, event);
 
-		expect(NextResponse.redirect as Mock).toHaveBeenCalledOnce();
-		expect(NextResponse.redirect as Mock).toReturnWith(
-			"https://example.com/en/default-channel",
+		expect(NextResponse.redirect as Mock).toHaveBeenCalledWith(
+			new URL("https://example.com/en/default-channel"),
 		);
 	});
 
@@ -80,9 +82,8 @@ describe("base handler", () => {
 		const request = createNextRequest("/en");
 		await baseHandler(request, event);
 
-		expect(NextResponse.redirect as Mock).toHaveBeenCalledOnce();
-		expect(NextResponse.redirect as Mock).toReturnWith(
-			"https://example.com/en/default-channel",
+		expect(NextResponse.redirect as Mock).toHaveBeenCalledWith(
+			new URL("https://example.com/en/default-channel"),
 		);
 	});
 
@@ -90,9 +91,8 @@ describe("base handler", () => {
 		const request = createNextRequest("/en/channel-euro");
 		await baseHandler(request, event);
 
-		expect(NextResponse.redirect as Mock).toHaveBeenCalledOnce();
-		expect(NextResponse.redirect as Mock).toReturnWith(
-			"https://example.com/en/default-channel",
+		expect(NextResponse.redirect as Mock).toHaveBeenCalledWith(
+			new URL("https://example.com/en/default-channel"),
 		);
 	});
 
@@ -100,9 +100,8 @@ describe("base handler", () => {
 		const request = createNextRequest("/pl-PL");
 		await baseHandler(request, event);
 
-		expect(NextResponse.redirect as Mock).toHaveBeenCalledOnce();
-		expect(NextResponse.redirect as Mock).toReturnWith(
-			"https://example.com/pl-PL/channel-pln",
+		expect(NextResponse.redirect as Mock).toHaveBeenCalledWith(
+			new URL("https://example.com/pl-PL/channel-pln"),
 		);
 	});
 
@@ -110,9 +109,8 @@ describe("base handler", () => {
 		const request = createNextRequest("/EN/default-channel");
 		await baseHandler(request, event);
 
-		expect(NextResponse.rewrite as Mock).toHaveBeenCalledOnce();
-		expect(NextResponse.rewrite as Mock).toReturnWith(
-			"https://example.com/en/default-channel",
+		expect(NextResponse.rewrite as Mock).toHaveBeenCalledWith(
+			new URL("https://example.com/en/default-channel"),
 		);
 	});
 });

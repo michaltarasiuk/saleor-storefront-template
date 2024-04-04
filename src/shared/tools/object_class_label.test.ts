@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { getObjectClassLabel, isRecord } from "./object_class_label";
+import { getObjectClassLabel, isObject } from "./object_class_label";
 
 describe("object class label", () => {
 	test("primitive types", () => {
@@ -39,15 +39,15 @@ describe("object class label", () => {
 		expect(getObjectClassLabel(new Float64Array())).toBe("float64array");
 	});
 
-	test("is record", () => {
-		expect(isRecord({})).toBeTruthy();
-		expect(isRecord([])).toBeFalsy();
-		expect(isRecord(() => undefined)).toBeFalsy();
-		expect(isRecord(new Date())).toBeFalsy();
-		expect(isRecord(/(?:)/)).toBeFalsy();
-		expect(isRecord(new Error())).toBeFalsy();
-		expect(isRecord(new Map())).toBeFalsy();
-		expect(isRecord(new Set())).toBeFalsy();
-		expect(isRecord(Promise.resolve())).toBeFalsy();
+	test("is object", () => {
+		expect(isObject({})).toBeTruthy();
+		expect(isObject([])).toBeFalsy();
+		expect(isObject(() => undefined)).toBeFalsy();
+		expect(isObject(new Date())).toBeFalsy();
+		expect(isObject(/(?:)/)).toBeFalsy();
+		expect(isObject(new Error())).toBeFalsy();
+		expect(isObject(new Map())).toBeFalsy();
+		expect(isObject(new Set())).toBeFalsy();
+		expect(isObject(Promise.resolve())).toBeFalsy();
 	});
 });

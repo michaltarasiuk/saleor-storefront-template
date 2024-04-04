@@ -7,6 +7,6 @@ export function getObjectClassLabel(value: unknown): string {
 		.toLowerCase();
 }
 
-export function isRecord(value: unknown): value is UnknownRecord {
+export function isObject(value: unknown): value is UnknownRecord {
 	return getObjectClassLabel(value) === "object";
 }

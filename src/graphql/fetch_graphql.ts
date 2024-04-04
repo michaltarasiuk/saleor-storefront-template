@@ -1,12 +1,8 @@
-import { isRecord } from "@/shared/tools/object_class_label";
+import { isObject } from "@/shared/tools/object_class_label";
 import * as GraphQLWeb from "@0no-co/graphql.web";
 import type { SetRequired } from "type-fest";
 import { array, object, optional, parse, string, unknown } from "valibot";
 import type { TypedDocumentString } from "./generated/graphql";
-
-type FetchOptions = Omit<RequestInit, "method" | "body">;
-
-const url = new URL("/graphql/", process.env.NEXT_PUBLIC_GRAPHQL_ORIGIN);
 
 const applicationMediaTypes = {
 	json: "application/json",
@@ -14,9 +10,8 @@ const applicationMediaTypes = {
 };
 const mediaTypes = [
 	["Content-Type", applicationMediaTypes.json],
-	...Object.values(applicationMediaTypes).map(
-		(value) => ["Accept", value] satisfies [string, string],
-	),
+	["Accept", applicationMediaTypes.json],
+	["Accept", applicationMediaTypes.graphqlJson],
 ] satisfies HeadersInit;
 
 const JSON_SCHEMA = object({
@@ -33,8 +28,9 @@ const JSON_SCHEMA = object({
 export async function fetchGraphQL<Data, Variables>(
 	query: TypedDocumentString<Data, Variables>,
 	variables: Variables,
-	{ headers, ...fetchOptions }: FetchOptions = {},
+	{ headers, ...fetchOptions }: Omit<RequestInit, "method" | "body"> = {},
 ) {
+	const url = new URL("/graphql/", process.env.NEXT_PUBLIC_GRAPHQL_ORIGIN);
 	const response = await fetch(url, {
 		method: "POST",
 		body: JSON.stringify({
@@ -44,17 +40,13 @@ export async function fetchGraphQL<Data, Variables>(
 		headers: new Headers([
 			...mediaTypes,
 			...Object.entries(
-				isRecord(headers) ? headers : Object.fromEntries(headers ?? []),
+				isObject(headers) ? headers : Object.fromEntries(headers ?? []),
 			),
 		]),
 		...fetchOptions,
 	});
-	const contentType = response.headers.get("Content-Type");
 
-	if (
-		(contentType === applicationMediaTypes.json && response.status === 200) ||
-		(contentType === applicationMediaTypes.graphqlJson && response.ok)
-	) {
+	if (validateResponseContentType(response)) {
 		const json = await response.json();
 		const { data, errors } = parse(JSON_SCHEMA, json);
 
@@ -64,6 +56,14 @@ export async function fetchGraphQL<Data, Variables>(
 		};
 	}
 	throw new Error("Invalid response");
+}
+
+function validateResponseContentType(response: Response) {
+	const contentType = response.headers.get("Content-Type");
+	return (
+		(contentType === applicationMediaTypes.json && response.status === 200) ||
+		(contentType === applicationMediaTypes.graphqlJson && response.ok)
+	);
 }
 
 type GraphQLWebError = SetRequired<Partial<GraphQLWeb.GraphQLError>, "message">;

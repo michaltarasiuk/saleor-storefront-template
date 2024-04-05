@@ -86,12 +86,7 @@ function getResponse(
 		)
 		.with(
 			{
-				locale: (() => {
-					if (requestedLocale) {
-						return getLocaleOrNull(requestedLocale)?.baseName;
-					}
-					return undefined;
-				})(),
+				locale: requestedLocale && getLocaleOrNull(requestedLocale)?.baseName,
 				channel: requestedChannel,
 			},
 			() => NextResponse.rewrite(url),

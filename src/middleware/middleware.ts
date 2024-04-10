@@ -20,8 +20,8 @@ export function middleware() {
 			}
 		};
 
-	const use = (handler: Handler) => {
-		handlers.push(handler);
+	const use = (...handler: Handler[]) => {
+		handlers.push(...handler);
 
 		return commonReturn;
 	};

@@ -38,6 +38,7 @@ vi.mock("next/server", async (importOriginal) => {
 	};
 });
 
+// NextFetchEvent is not exported (https://github.com/vercel/next.js/blob/canary/packages/next/server.js)
 declare const event: NextFetchEvent;
 
 function createNextRequest(pathname = "/") {
